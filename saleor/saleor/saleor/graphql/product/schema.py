@@ -1,5 +1,6 @@
 import graphene
 from promise import Promise
+from .mutations import SetCustomPrice
 
 from ...permission.enums import ProductPermissions
 from ...permission.utils import has_one_of_permissions
@@ -724,3 +725,6 @@ class ProductMutations(graphene.ObjectType):
 
     variant_media_assign = VariantMediaAssign.Field()
     variant_media_unassign = VariantMediaUnassign.Field()
+
+    class ProductMutations(graphene.ObjectType):
+    set_custom_price = SetCustomPrice.Field()
