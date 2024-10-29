@@ -24,6 +24,7 @@ from ..permission.models import Permission, PermissionsMixin, _user_has_perm
 from ..site.models import SiteSettings
 from . import CustomerEvents
 from .validators import validate_possible_number
+from saleor.account.models import User
 
 
 class PossiblePhoneNumberField(PhoneNumberField):
@@ -432,3 +433,15 @@ class Group(models.Model):
 
     def natural_key(self):
         return (self.name,)
+
+
+class CustomerProductPrice(models.Model):
+    customer = models.ForeignKey(User,on_delete=models.CASCADE)
+    product = models.ForeignKey("Product",on_delete=models.CASCADE)
+    custom_price = models.DecimalField(max_digits=10,decimal_places=2)
+
+    class Meta:
+        unique_together = ("customer", "product")
+
+    def __str__(self):
+        return f"{self.customer} - {self.product}: {self.custom_price}"

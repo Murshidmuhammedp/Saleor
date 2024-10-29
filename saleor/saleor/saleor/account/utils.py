@@ -8,6 +8,7 @@ from ..core.utils.events import call_event
 from ..permission.models import Permission
 from ..plugins.manager import get_plugins_manager
 from .models import Group, User
+from .models import CustomerProductPrice
 
 if TYPE_CHECKING:
     from ..plugins.manager import PluginsManager
@@ -157,3 +158,10 @@ def send_user_event(user: User, created: bool, updated: bool):
         event = manager.staff_updated if user.is_staff else manager.customer_updated
     if event:
         call_event(event, user)
+
+def get_customer_specific_price(product, customer):
+    try:
+        custom_price_entry = CustomerProductPrice.objects.get(product=product, customer=customer)
+        return custom_price_entry.custom_price
+    except CustomerProductPrice.DoesNotExist:
+        return product.default_price
